@@ -12,36 +12,48 @@ function exportNav2() {
         return;
     }
 
+    const scaleStr = prompt("Enter Export Scale Factor (e.g., 1.0 = 100%, 10.0 = 1000% larger map):", "1.0");
+    const exportScale = Math.min(10, Math.max(0.1, parseFloat(scaleStr) || 1.0));
+
     const resolution = parseFloat(resInput.value);
     
-    // 1. Calculate bounds
+    // 1. Calculate bounds (applied to scaled world coords)
     let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
     walls.forEach(w => {
-        minX = Math.min(minX, w.p1.x, w.p2.x);
-        minY = Math.min(minY, w.p1.y, w.p2.y);
-        maxX = Math.max(maxX, w.p1.x, w.p2.x);
-        maxY = Math.max(maxY, w.p1.y, w.p2.y);
+        minX = Math.min(minX, w.p1.x * exportScale, w.p2.x * exportScale);
+        minY = Math.min(minY, w.p1.y * exportScale, w.p2.y * exportScale);
+        maxX = Math.max(maxX, w.p1.x * exportScale, w.p2.x * exportScale);
+        maxY = Math.max(maxY, w.p1.y * exportScale, w.p2.y * exportScale);
     });
     
     objects.forEach(o => {
+        const ox = o.x * exportScale;
+        const oy = o.y * exportScale;
         if (o.type === 'box') {
-            minX = Math.min(minX, o.x - o.w/2);
-            minY = Math.min(minY, o.y - o.h/2);
-            maxX = Math.max(maxX, o.x + o.w/2);
-            maxY = Math.max(maxY, o.y + o.h/2);
+            const ow = o.w * exportScale;
+            const oh = o.h * exportScale;
+            minX = Math.min(minX, ox - ow/2);
+            minY = Math.min(minY, oy - oh/2);
+            maxX = Math.max(maxX, ox + ow/2);
+            maxY = Math.max(maxY, oy + oh/2);
         } else if (o.type === 'cylinder') {
-            minX = Math.min(minX, o.x - o.r);
-            minY = Math.min(minY, o.y - o.r);
-            maxX = Math.max(maxX, o.x + o.r);
-            maxY = Math.max(maxY, o.y + o.r);
+            const or = o.r * exportScale;
+            minX = Math.min(minX, ox - or);
+            minY = Math.min(minY, oy - or);
+            maxX = Math.max(maxX, ox + or);
+            maxY = Math.max(maxY, oy + or);
         } else if (o.type === 'pixel') {
-            const res = parseFloat(resInput.value);
-            minX = Math.min(minX, o.x - res/2);
-            minY = Math.min(minY, o.y - res/2);
-            maxX = Math.max(maxX, o.x + res/2);
-            maxY = Math.max(maxY, o.y + res/2);
+            const res = parseFloat(resInput.value) * exportScale;
+            minX = Math.min(minX, ox - res/2);
+            minY = Math.min(minY, oy - res/2);
+            maxX = Math.max(maxX, ox + res/2);
+            maxY = Math.max(maxY, oy + res/2);
         }
     });
+
+    // Replace calculations to use scaled coords
+    const getScaledX = (origX) => (origX * exportScale - minX) / resolution;
+    const getScaledY = (origY) => pxHeight - (origY * exportScale - minY) / resolution;
 
     // Add padding (0.5m)
     const padding = 0.5;
@@ -69,10 +81,10 @@ function exportNav2() {
 
     walls.forEach(w => {
         // Map world to pixel (careful with Y direction)
-        const x1 = (w.p1.x - minX) / resolution;
-        const y1 = pxHeight - (w.p1.y - minY) / resolution;
-        const x2 = (w.p2.x - minX) / resolution;
-        const y2 = pxHeight - (w.p2.y - minY) / resolution;
+        const x1 = (w.p1.x * exportScale - minX) / resolution;
+        const y1 = pxHeight - (w.p1.y * exportScale - minY) / resolution;
+        const x2 = (w.p2.x * exportScale - minX) / resolution;
+        const y2 = pxHeight - (w.p2.y * exportScale - minY) / resolution;
 
         ectx.beginPath();
         ectx.moveTo(x1, y1);
@@ -81,21 +93,21 @@ function exportNav2() {
     });
 
     objects.forEach(o => {
-        const x = (o.x - minX) / resolution;
-        const y = pxHeight - (o.y - minY) / resolution;
+        const x = (o.x * exportScale - minX) / resolution;
+        const y = pxHeight - (o.y * exportScale - minY) / resolution;
         if (o.type === 'box') {
-            const w = o.w / resolution;
-            const h = o.h / resolution;
+            const w = (o.w * exportScale) / resolution;
+            const h = (o.h * exportScale) / resolution;
             ectx.fillStyle = 'black';
             ectx.fillRect(x - w/2, y - h/2, w, h);
         } else if (o.type === 'cylinder') {
-            const r = o.r / resolution;
+            const r = (o.r * exportScale) / resolution;
             ectx.beginPath();
             ectx.arc(x, y, r, 0, Math.PI * 2);
             ectx.fillStyle = 'black';
             ectx.fill();
         } else if (o.type === 'pixel') {
-            const w = parseFloat(resInput.value) / resolution;
+            const w = (parseFloat(resInput.value) * exportScale) / resolution;
             ectx.fillStyle = 'black';
             ectx.fillRect(x - w/2, y - w/2, w, w);
         }
@@ -143,6 +155,9 @@ function exportGazebo() {
         return;
     }
 
+    const scaleStr = prompt("Enter Export Scale Factor (e.g., 1.0 = 100%, 10.0 = 1000% larger world):", "1.0");
+    const exportScale = Math.min(10, Math.max(0.1, parseFloat(scaleStr) || 1.0));
+
     let sdf = `<?xml version='1.0'?>
 <sdf version='1.6'>
   <world name='default'>
@@ -155,12 +170,12 @@ function exportGazebo() {
 `;
 
     walls.forEach((w, i) => {
-        const dx = w.p2.x - w.p1.x;
-        const dy = w.p2.y - w.p1.y;
+        const dx = (w.p2.x - w.p1.x) * exportScale;
+        const dy = (w.p2.y - w.p1.y) * exportScale;
         const length = Math.sqrt(dx*dx + dy*dy);
         const angle = Math.atan2(dy, dx);
-        const cx = (w.p1.x + w.p2.x) / 2;
-        const cy = (w.p1.y + w.p2.y) / 2;
+        const cx = ((w.p1.x + w.p2.x) / 2) * exportScale;
+        const cy = ((w.p1.y + w.p2.y) / 2) * exportScale;
 
         sdf += `
     <model name='wall_${i}'>
@@ -194,12 +209,18 @@ function exportGazebo() {
     objects.forEach((o, i) => {
         let geometry = '';
         let z = 0.5;
+        const ox = o.x * exportScale;
+        const oy = o.y * exportScale;
+
         if (o.type === 'box') {
-            geometry = `<box><size>${o.w} ${o.h} 1.0</size></box>`;
+            const ow = o.w * exportScale;
+            const oh = o.h * exportScale;
+            geometry = `<box><size>${ow} ${oh} 1.0</size></box>`;
         } else if (o.type === 'cylinder') {
-            geometry = `<cylinder><radius>${o.r}</radius><length>1.0</length></cylinder>`;
+            const or = o.r * exportScale;
+            geometry = `<cylinder><radius>${or}</radius><length>1.0</length></cylinder>`;
         } else if (o.type === 'pixel') {
-            const res = parseFloat(resInput.value);
+            const res = parseFloat(resInput.value) * exportScale;
             geometry = `<box><size>${res} ${res} 0.5</size></box>`;
             z = 0.25;
         }
@@ -208,7 +229,7 @@ function exportGazebo() {
     <model name='obj_${i}'>
       <static>1</static>
       <link name='link'>
-        <pose>${o.x} ${o.y} ${z} 0 0 0</pose>
+        <pose>${ox} ${oy} ${z} 0 0 0</pose>
         <collision name='collision'>
           <geometry>
             ${geometry}

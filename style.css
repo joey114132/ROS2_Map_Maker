@@ -34,33 +34,65 @@ h1, h2, h3 {
 
 /* Header & Toolbar */
 header {
-    height: var(--toolbar-height);
     background-color: var(--sidebar-bg);
     border-bottom: 1px solid var(--border-color);
     display: flex;
+    flex-direction: column;
+    z-index: 100;
+}
+
+.header-top {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.header-bottom {
+    height: 54px;
+    display: flex;
     align-items: center;
     padding: 0 20px;
-    gap: 30px;
-    z-index: 100;
+    background: rgba(255, 255, 255, 0.02);
 }
 
 .logo {
     display: flex;
     align-items: center;
     gap: 10px;
+    flex-shrink: 0;
 }
 
 .logo h1 {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     font-weight: 700;
     letter-spacing: -0.5px;
+    white-space: nowrap;
 }
 
 .toolbar {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
     flex-grow: 1;
+}
+
+.tool-group {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+#pen-color {
+    height: 32px;
+    width: 32px;
+    cursor: pointer;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background: none;
+    padding: 0;
 }
 
 .divider {
@@ -74,14 +106,18 @@ button {
     background-color: transparent;
     border: 1px solid var(--border-color);
     color: var(--text-primary);
-    padding: 8px 12px;
-    border-radius: 6px;
+    padding: 8px 16px;
+    height: 38px;
+    border-radius: 8px;
     cursor: pointer;
-    font-size: 0.9rem;
-    transition: all 0.2s ease;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     align-items: center;
-    gap: 6px;
+    justify-content: center;
+    gap: 8px;
+    white-space: nowrap;
 }
 
 button:hover {
@@ -109,7 +145,8 @@ button.active {
 .actions {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 8px;
+    flex-shrink: 0;
 }
 
 .premium-btn {
@@ -130,7 +167,7 @@ button.active {
 .input-group {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     font-size: 0.85rem;
     color: var(--text-secondary);
 }
@@ -139,9 +176,14 @@ input[type="number"] {
     background: var(--bg-color);
     border: 1px solid var(--border-color);
     color: var(--text-primary);
-    padding: 4px 8px;
+    padding: 6px 8px;
     border-radius: 4px;
-    width: 60px;
+    width: 70px;
+    outline: none;
+}
+
+input[type="number"]:focus {
+    border-color: var(--accent-color);
 }
 
 /* Main Layout */
