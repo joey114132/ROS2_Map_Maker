@@ -1,0 +1,215 @@
+:root {
+    --bg-color: #0d1117;
+    --sidebar-bg: #161b22;
+    --accent-color: #58a6ff;
+    --accent-glow: rgba(88, 166, 255, 0.3);
+    --text-primary: #c9d1d9;
+    --text-secondary: #8b949e;
+    --border-color: #30363d;
+    --premium-gradient: linear-gradient(135deg, #58a6ff, #1f6feb);
+    --hover-bg: #21262d;
+    --toolbar-height: 60px;
+    --sidebar-width: 240px;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    overflow: hidden;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+h1, h2, h3 {
+    font-family: 'Outfit', sans-serif;
+}
+
+/* Header & Toolbar */
+header {
+    height: var(--toolbar-height);
+    background-color: var(--sidebar-bg);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    gap: 30px;
+    z-index: 100;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo h1 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+.toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-grow: 1;
+}
+
+.divider {
+    width: 1px;
+    height: 24px;
+    background-color: var(--border-color);
+    margin: 0 8px;
+}
+
+button {
+    background-color: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+button:hover {
+    background-color: var(--hover-bg);
+    border-color: var(--text-secondary);
+}
+
+button.active {
+    background-color: var(--accent-color);
+    color: white;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 10px var(--accent-glow);
+}
+
+.premium-btn {
+    background: var(--premium-gradient);
+    border: none;
+    color: white;
+    font-weight: 600;
+    padding: 10px 16px;
+}
+
+.premium-btn:hover {
+    filter: brightness(1.1);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(31, 111, 235, 0.4);
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+input[type="number"] {
+    background: var(--bg-color);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    padding: 4px 8px;
+    border-radius: 4px;
+    width: 60px;
+}
+
+/* Main Layout */
+main {
+    flex-grow: 1;
+    display: flex;
+    position: relative;
+}
+
+.sidebar {
+    width: var(--sidebar-width);
+    background-color: var(--sidebar-bg);
+    border-right: 1px solid var(--border-color);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.sidebar h3 {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+}
+
+.control-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+}
+
+.shortcuts ul {
+    list-style: none;
+}
+
+.shortcuts li {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.shortcuts span {
+    background: var(--hover-bg);
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: var(--accent-color);
+    font-weight: 600;
+    font-size: 0.75rem;
+}
+
+/* Canvas Area */
+#canvas-container {
+    flex-grow: 1;
+    position: relative;
+    background-color: #090c10;
+    cursor: crosshair;
+}
+
+canvas {
+    display: block;
+}
+
+.coordinates {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    background: rgba(22, 27, 34, 0.8);
+    backdrop-filter: blur(4px);
+    padding: 6px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--border-color);
+    font-family: monospace;
+    font-size: 0.85rem;
+    color: var(--accent-color);
+    pointer-events: none;
+}
+
+#status-msg {
+    color: #3fb950;
+    font-weight: 500;
+    margin-bottom: 10px;
+}
