@@ -96,12 +96,29 @@ button.active {
     box-shadow: 0 0 10px var(--accent-glow);
 }
 
+.sidebar {
+    width: var(--sidebar-width);
+    background-color: var(--sidebar-bg);
+    border-right: 1px solid var(--border-color);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
 .premium-btn {
     background: var(--premium-gradient);
     border: none;
     color: white;
     font-weight: 600;
     padding: 10px 16px;
+    white-space: nowrap;
 }
 
 .premium-btn:hover {
@@ -132,16 +149,6 @@ main {
     flex-grow: 1;
     display: flex;
     position: relative;
-}
-
-.sidebar {
-    width: var(--sidebar-width);
-    background-color: var(--sidebar-bg);
-    border-right: 1px solid var(--border-color);
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
 }
 
 .sidebar h3 {

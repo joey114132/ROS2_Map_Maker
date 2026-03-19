@@ -127,8 +127,15 @@ function init() {
 function resize() {
     width = canvas.parentElement.clientWidth;
     height = canvas.parentElement.clientHeight;
-    canvas.width = width;
-    canvas.height = height;
+    
+    // Support high-DPI displays
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
+    canvas.style.width = width + 'px';
+    canvas.style.height = height + 'px';
+    
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     
     // Center origin if first time
     if (offsetX === 0 && offsetY === 0) {
